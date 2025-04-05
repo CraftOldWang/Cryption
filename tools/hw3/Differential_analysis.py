@@ -1,7 +1,7 @@
-from SPN_copy import spn, pi_p
+from SPN_copy import spn
 from itertools import product
 from collections import defaultdict
-from utils import pi_s_reverse, xor, is_dif_satisfy, get_differential
+from utils import is_dif_satisfy, get_differential, get_reverse_func
 
 # 解包顺序要看看啊，这一回好歹是claude救了我，
 
@@ -37,7 +37,7 @@ def get_T_set(delta_x, K):
 
 
 
-def differential_attack(T_set, times, dif1=None, dif2=None, dif3=None, dif4=None):
+def differential_attack(T_set, times, dif1=None, dif2=None, dif3=None, dif4=None, reverse_func = None):
     key_candidate = defaultdict(int) # 不存在的键的值，会初始化为0
 
     diffs = [dif1, dif2, dif3, dif4]
@@ -55,6 +55,10 @@ def differential_attack(T_set, times, dif1=None, dif2=None, dif3=None, dif4=None
         if not is_effective:
             continue
         
+        if reverse_func :
+            y = reverse_func(y)
+            y_star = reverse_func(y_star)
+            
         y_block = [y[4*i:4*i+4] for i in active_indices]
         y_star_block = [y_star[4*i:4*i+4] for i in active_indices]
         for key in product(range(16), repeat=len(active_indices)):
@@ -69,7 +73,6 @@ def differential_attack(T_set, times, dif1=None, dif2=None, dif3=None, dif4=None
 
     maxkey = max(key_candidate, key= key_candidate.get)
     return maxkey
-
 
 
 
@@ -94,8 +97,30 @@ def solution(K, times):
     # try_maxkey3 = differential_attack(T_set_gen3, times,dif1="0110", dif3="0110", dif4="0110")
     # ans_K[],ans_K[],_ = try_maxkey3
     # print(try_maxkey3)
+    
+    # 拿到K4 ok
+    # T_set_gen3 = get_T_set(f"{0b1010_0000_0000_0000:016b}", K)
+    # try_maxkey3 = differential_attack(T_set_gen3, times,dif1 ="1000", dif3 = "1000", dif4= "1000" ,reverse_func=get_reverse_func(ans_K, 1))
+    # ans_K[3], _, _ = try_maxkey3
+    
+    # # 拿到K3 ok
+    # T_set_gen4 = get_T_set(f"{0b0000_1010_0000_0000:016b}", K)
+    # try_maxkey4 = differential_attack(T_set_gen4, times,dif1="0100" ,reverse_func=get_reverse_func(ans_K, 2))
+    # ans_K[2] = try_maxkey4
+    
+    # # 拿到K2
+    # T_set_gen5 = get_T_set(f"{0b :016b}", K)
+    # try_maxkey5 = differential_attack(T_set_gen5, times,dif1= ,reverse_func=get_reverse_func(ans_K, 3))
+    # ans_K[1] = try_maxkey5
+    
+    # # 拿到K1
+    # # T_set_gen6 = get_T_set(f"{0b :016b}", K)
+    # # try_maxkey6 = differential_attack(T_set_gen5, times,dif1= ,reverse_func=get_reverse_func(ans_K, 3))
+    # # ans_K[1] = try_maxkey6
+    # # 最后一层手动推吧
+    
     return ans_K
 
 
 # times 是 有效的次数。。。。因为有效的其实不多。。。。。所以其实用得挺快的
-# solution(K, 400)
+solution(K, 400)
