@@ -1,6 +1,7 @@
-from SPN_copy import pi_s
+from SPN_copy import pi_s,pi_p,l,m
 
 pi_s_reverse = {v: k for k, v in pi_s.items()}  # 输入是int，输出也是，
+pi_p_reverse = {value:key for key,value in pi_p.items()}
 
 # 小函数们
 
@@ -25,7 +26,7 @@ def get_differential(delta_x):
 
 def xor(a: str, b: str):
     """
-    对两个长度为4的01字符串进行异或, 以字符串返回异或结果
+    对两个长度为相同的01字符串进行异或, 以字符串返回异或结果
 
     Args
         a(str)
@@ -55,3 +56,53 @@ def is_dif_satisfy(key_bin, y_block, y_star_block, diffs):
         if not check_one_dif(key, y_block[i], y_star_block[i], diffs[i]):
             return False
     return True
+
+
+
+
+def reverse_permutation(v:str):
+    """
+    逆置换，输入输出都为str，长度16
+    """
+    res = [None] * l * m
+    tmp_v = list(map(int, v))
+    for i in range(l * m):
+        res[pi_p_reverse[i+1]] = tmp_v[i] #键是 1-16 故+1
+    return res
+
+def reverse_substitution(u:str):
+    """
+    逆代换，输入输出为str，长度16
+    """
+    tmp_u = list(map(int,u))
+    v = []
+    for i in range(m):
+        tmp = tmp_u[4 * i : 4 * i + l]
+        before_pi_s = int("".join(str(tmp[i]) for i in range(4)), base=2)
+        after_pi_s = pi_s_reverse[before_pi_s]  # 应该不会出事的...
+        v.extend(list(f"{after_pi_s:04b}"))
+    return "".join(v) # v里面是字符串，把它们合起来。
+    # return [int(item) for item in v]
+
+def get_reverse_func(cur_K, n):
+    def reverse(y):
+        v4 = xor(y,''.join(cur_K[4:8]))
+        u4 = reverse_substitution(v4)
+        if n == 1:
+            return u4
+        w3 = xor(u4, ''.join(cur_K[3:7]))
+        v3 = reverse_permutation(w3)
+        u3 = reverse_substitution(v3)
+        if n == 2:
+            return u3
+        w2 = xor(u2, ''.join(cur_K[2:6]))
+        v2 = reverse_permutation(w2)
+        u2 = reverse_substitution(v2)
+        if n == 3:
+            return u2
+        w1 = xor(u1, ''.join(cur_K[1:5]))
+        v1 = reverse_permutation(w1)
+        u1 = reverse_substitution(v1)
+        if n == 4:
+            return u1
+    return reverse

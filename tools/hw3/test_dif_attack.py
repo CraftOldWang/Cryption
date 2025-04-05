@@ -4,6 +4,8 @@ import random
 
 def check_solution(test_times, effective_pair_per_run):
     random_list = [f"{random.getrandbits(32):032b}" for _ in range(test_times)]
+    total_test_num = len(random_list)
+    correct_num = 0
     for index, random_key in enumerate(random_list):
         failed = False
         ans_K = solution(random_key, effective_pair_per_run)
@@ -19,3 +21,7 @@ def check_solution(test_times, effective_pair_per_run):
                 failed = True
         if not failed:
             print(f"PASSED  {index}th test")
+            correct_num += 1
+            print(correct_num)
+
+    print(f"正确率为：{correct_num/total_test_num}")
