@@ -1,6 +1,8 @@
 from SPN_copy import pi_s
 
-pi_s_reverse = {v: k for k, v in pi_s.items()}  # 输入是数字，输出也是，
+pi_s_reverse = {v: k for k, v in pi_s.items()}  # 输入是int，输出也是，
+
+# 小函数们
 
 
 def get_differential(delta_x):
@@ -38,6 +40,7 @@ def xor(a: str, b: str):
     result = a_int ^ b_int
     return format(result, f"0{len(a)}b")
 
+
 def check_one_dif(L, y_block, y_star_block, dif):
     v = xor(L, y_block)
     u = f"{pi_s_reverse[int(v,base = 2)]:04b}"
@@ -48,10 +51,7 @@ def check_one_dif(L, y_block, y_star_block, dif):
 
 
 def is_dif_satisfy(key_bin, y_block, y_star_block, diffs):
-    for i,key in enumerate(key_bin):
-        if not check_one_dif(key, y_block[i], y_star_block[i] ,diffs[i]):
+    for i, key in enumerate(key_bin):
+        if not check_one_dif(key, y_block[i], y_star_block[i], diffs[i]):
             return False
     return True
-
-
-

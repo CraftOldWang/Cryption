@@ -22,6 +22,7 @@ def get_T_set(delta_x, K):
         generator : 生成 (x, x_star, y, y_star)四元组
     """
     # cur_time = 0
+    # 因为混乱的格式而进行一堆转换
     K_intlist = [int(num) for num in K]
     for x, x_star in get_differential(delta_x):
         x_intlist = [int(num) for num in x]
