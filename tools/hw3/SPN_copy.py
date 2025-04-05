@@ -80,7 +80,7 @@ def do_permutation(v: list):
 # x = list(map(int, [int(num) for num in str(input())] ))
 # x = list(map(int, input()))  # 也是。。。直接读取一行
 # x = [int(num) for num in input()] # 由于是直接读取一行，所以可以这么搞 ,且读出来字符串是iterable
-K = list(map(int, input()))
+# K = list(map(int, input()))
 # x = a_bits
 # K = b_bits
 
